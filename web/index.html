@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scheduler Workbench</title>
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="/app.js"></script>
+</head>
+<body>
+  <header class="top"><div class="shell top-inner">
+    <strong class="brand-title">Scheduler Workbench</strong>
+    <span class="engine">C++17 simulation</span>
+  </div></header>
+  <main class="shell">
+    <section class="intro">
+      <div><h1>Compare scheduling policies</h1><p>Run the same workload under two policies and see how they share CPU, memory, and disk.</p></div>
+    </section>
+    <form id="workbench">
+      <div class="setup">
+        <section class="panel">
+          <h2>Simulation settings</h2>
+          <div class="fields">
+            <label>Memory units<input name="memory" type="number" required min="1" max="1000000" value="64"></label>
+            <label>Page frames<input name="frames" type="number" required min="1" max="10000" value="4"></label>
+            <label>Disk scheduling<select name="io"><option value="fcfs">FCFS</option><option value="sstf" selected>SSTF</option><option value="scan">SCAN</option></select></label>
+            <label>Memory allocation<select name="fit"><option value="first">First Fit</option><option value="best">Best Fit</option><option value="worst">Worst Fit</option></select></label>
+            <label>Page replacement<select name="paging"><option value="fifo">FIFO</option><option value="lru">LRU</option></select></label>
+            <label>CPU quantum<input name="quantum" type="number" required min="1" max="1000000" value="4"></label>
+            <label>Starvation threshold<input name="starvation" type="number" required min="1" max="1000000" value="20"></label>
+          </div>
+        </section>
+        <section class="panel compare">
+          <h2>Policies</h2>
+          <label><span class="chip a">A</span> Baseline<select name="modeA"></select></label>
+          <label><span class="chip b">B</span> Comparison<select name="modeB"></select></label>
+          <button type="submit" id="run">Run comparison</button>
+          <p id="status" role="status" aria-live="polite"></p>
+        </section>
+      </div>
+      <section class="panel workload">
+        <div class="section-head">
+          <div><h2>Process workload</h2><p>Bursts alternate between CPU ticks and disk tracks. Use 0 for no deadline.</p></div>
+          <div class="actions"><button type="button" class="secondary" id="demo">Load example</button><button type="button" class="secondary" id="add">+ Add process</button></div>
+        </div>
+        <div class="scroll"><table class="inputs">
+          <thead><tr><th scope="col">PID</th><th scope="col">Arrival</th><th scope="col">Priority</th><th scope="col">Memory</th><th scope="col">Deadline</th><th scope="col">Bursts</th><th scope="col">Pages (optional)</th><th scope="col"><span class="sr-only">Remove</span></th></tr></thead>
+          <tbody id="jobs"></tbody>
+        </table></div>
+      </section>
+    </form>
+    <section class="panel results" id="results" hidden>
+      <div class="section-head"><div><h2>Comparison results</h2><p id="results-note"></p></div><div class="legend" id="legend"></div></div>
+      <div class="charts" id="charts"></div>
+      <details><summary>All simulation metrics</summary><div class="scroll" id="metrics"></div></details>
+      <details><summary>Per-process results</summary><div id="processes"></div></details>
+    </section>
+  </main>
+</body>
+</html>
